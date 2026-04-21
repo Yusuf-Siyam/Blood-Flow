@@ -1,6 +1,7 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import MainLayout from "./components/MainLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Blogs from "./pages/Blogs";
 import Dashboard from "./pages/Dashboard";
 import DonationRequests from "./pages/DonationRequests";
@@ -29,10 +30,38 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/dashboard/:role" element={<Dashboard />} />
-          <Route path="/my-requests" element={<MyRequests />} />
-          <Route path="/my-donations" element={<MyDonations />} />
-          <Route path="/rewards" element={<Rewards />} />
+          <Route
+            path="/dashboard/:role"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-requests"
+            element={
+              <ProtectedRoute>
+                <MyRequests />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-donations"
+            element={
+              <ProtectedRoute>
+                <MyDonations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rewards"
+            element={
+              <ProtectedRoute>
+                <Rewards />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<Landing />} />
         </Route>
       </Routes>

@@ -1,20 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaSearch, FaTint } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
+import useAuthAction from "../hooks/useAuthAction";
 import "./SearchDonors.css";
 
 const donors = [
-  { name: "Siyam", bloodType: "A+", location: "Dhaka", available: true },
-  { name: "johir", bloodType: "B+", location: "Chittagong", available: false },
-  { name: "Arif", bloodType: "O-", location: "Sylhet", available: true },
-  { name: "Salma", bloodType: "AB+", location: "Rajshahi", available: true },
-  { name: "Korim", bloodType: "A-", location: "Khulna", available: false },
-  { name: "Jahanara", bloodType: "B-", location: "Barisal", available: true },
+  {
+    name: "Siyam",
+    bloodType: "A+",
+    district: "Dhaka",
+    location: "Mirpur",
+    available: true,
+  },
+  {
+    name: "johir",
+    bloodType: "B+",
+    district: "Chattogram",
+    location: "Patiya",
+    available: false,
+  },
+  {
+    name: "Arif",
+    bloodType: "O-",
+    district: "Sylhet",
+    location: "Zindabazar",
+    available: true,
+  },
+  {
+    name: "Salma",
+    bloodType: "AB+",
+    district: "Rajshahi",
+    location: "Boalia",
+    available: true,
+  },
+  {
+    name: "Korim",
+    bloodType: "A-",
+    district: "Khulna",
+    location: "Sonadanga",
+    available: false,
+  },
+  {
+    name: "Jahanara",
+    bloodType: "B-",
+    district: "Barishal",
+    location: "Bakerganj",
+    available: true,
+  },
 ];
 
 const SearchDonors = () => {
+  const { requireAuth, isAuthenticated } = useAuthAction();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [bloodType, setBloodType] = useState("");
-  const [location, setLocation] = useState("");
+  const [district, setDistrict] = useState("");
+  const [availability, setAvailability] = useState("all");
   const [filteredDonors, setFilteredDonors] = useState(donors);
+  const [contactingDonor, setContactingDonor] = useState(null);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -22,12 +64,33 @@ const SearchDonors = () => {
       return (
         (bloodType === "" ||
           donor.bloodType.toLowerCase() === bloodType.toLowerCase()) &&
-        (location === "" ||
-          donor.location.toLowerCase().includes(location.toLowerCase()))
+        (district === "" ||
+          donor.district.toLowerCase().includes(district.toLowerCase())) &&
+        (availability === "all" ||
+          donor.available === (availability === "available"))
       );
     });
     setFilteredDonors(filtered);
   };
+
+  const handleContact = (donor) => {
+    const continueTo = `/search-donors?donor=${encodeURIComponent(donor.name)}`;
+    const allow = requireAuth("contact-donor", continueTo);
+    if (!allow) return;
+    setContactingDonor(donor.name);
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set("donor", donor.name);
+    setSearchParams(nextParams);
+  };
+
+  useEffect(() => {
+    const continued = searchParams.get("continued");
+    const donorName = searchParams.get("donor");
+    if (!isAuthenticated || !donorName) return;
+    if (continued === "contact-donor" || contactingDonor !== donorName) {
+      setContactingDonor(donorName);
+    }
+  }, [searchParams, isAuthenticated, contactingDonor]);
 
   return (
     <div className="search-donors-container">
@@ -54,11 +117,22 @@ const SearchDonors = () => {
             <FaMapMarkerAlt className="input-icon" />
             <input
               type="text"
-              placeholder="Location (e.g., Dhaka)"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              placeholder="District (e.g., Dhaka)"
+              value={district}
+              onChange={(e) => setDistrict(e.target.value)}
               className="search-input"
             />
+          </div>
+          <div className="input-wrapper">
+            <select
+              value={availability}
+              onChange={(e) => setAvailability(e.target.value)}
+              className="search-input search-select"
+            >
+              <option value="all">All Availability</option>
+              <option value="available">Only Available</option>
+              <option value="unavailable">Only Unavailable</option>
+            </select>
           </div>
         </div>
         <button type="submit" className="search-button">
@@ -86,13 +160,18 @@ const SearchDonors = () => {
                 </p>
                 <p className="donor-info">
                   <FaMapMarkerAlt className="donor-info-icon" />
-                  Location: <strong>{donor.location}</strong>
+                  District: <strong>{donor.district}</strong>
+                </p>
+                <p className="donor-info">
+                  <FaMapMarkerAlt className="donor-info-icon" />
+                  Area: <strong>{donor.location}</strong>
                 </p>
               </div>
               <div className="donor-card-footer">
                 <button
                   className="contact-donor-btn"
                   disabled={!donor.available}
+                  onClick={() => handleContact(donor)}
                 >
                   Contact Donor
                 </button>
@@ -105,6 +184,16 @@ const SearchDonors = () => {
           </p>
         )}
       </div>
+
+      {contactingDonor && isAuthenticated && (
+        <div className="contact-panel">
+          <h2>Contact Access Granted</h2>
+          <p>
+            You can now contact <strong>{contactingDonor}</strong>. In a
+            production build this opens secure contact details.
+          </p>
+        </div>
+      )}
     </div>
   );
 };

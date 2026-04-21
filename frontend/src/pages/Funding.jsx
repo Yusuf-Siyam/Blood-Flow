@@ -1,11 +1,36 @@
+import { useEffect, useState } from "react";
 import { FaCreditCard, FaPaypal, FaUniversity } from "react-icons/fa";
+import { useSearchParams } from "react-router-dom";
+import useAuthAction from "../hooks/useAuthAction";
 
 const Funding = () => {
+  const { requireAuth, isAuthenticated } = useAuthAction();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [amount, setAmount] = useState("");
+  const [message, setMessage] = useState("");
+
   const handleDonate = () => {
-    // In a real app, you'd handle the authentication check and payment processing here.
-    // For this example, we'll just show an alert.
-    alert("Thank you for your donation!");
+    if (!amount || Number(amount) <= 0) {
+      setMessage("Please enter a valid donation amount.");
+      return;
+    }
+
+    const allow = requireAuth("donate-money", "/funding");
+    if (!allow) return;
+
+    setMessage(`Thank you for your donation of $${amount}.`);
+    setAmount("");
   };
+
+  useEffect(() => {
+    const continued = searchParams.get("continued");
+    if (continued === "donate-money" && isAuthenticated) {
+      setMessage("You are logged in. Continue your donation now.");
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.delete("continued");
+      setSearchParams(nextParams);
+    }
+  }, [searchParams, isAuthenticated, setSearchParams]);
 
   return (
     <div className="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
@@ -57,6 +82,8 @@ const Funding = () => {
                 type="number"
                 name="amount"
                 id="amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
                 className="w-full pl-7 pr-12 py-3 border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-lg"
                 placeholder="0.00"
                 aria-describedby="price-currency"
@@ -77,6 +104,9 @@ const Funding = () => {
             >
               Donate Now
             </button>
+            {message && (
+              <p className="mt-4 text-sm font-medium text-red-700">{message}</p>
+            )}
           </div>
         </div>
 

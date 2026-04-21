@@ -739,6 +739,10 @@
   grid-column: 1 / -1;
 }
 
+.donor-form-full {
+  grid-column: 1 / -1;
+}
+
 .request-list {
   display: grid;
   gap: 10px;
@@ -761,6 +765,7 @@
 
 .request-actions {
   display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
@@ -801,6 +806,36 @@
 
 .history-list span {
   color: #7a6868;
+}
+
+.history-list p {
+  margin: 0;
+  color: #8b1e1e;
+  font-size: 0.86rem;
+  text-transform: capitalize;
+}
+
+.reward-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.reward-box {
+  border: 1px solid rgba(159, 29, 29, 0.16);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+
+.reward-box h3 {
+  margin: 0 0 6px;
+  color: #5c3f3f;
+  font-size: 0.95rem;
+}
+
+.reward-box strong {
+  color: #8b1e1e;
+  font-size: 1.3rem;
 }
 
 .empty-state {

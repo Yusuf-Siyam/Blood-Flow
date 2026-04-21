@@ -89,13 +89,18 @@ async function findUserByEmail(email) {
 }
 
 async function createUser(userData) {
+  const normalizedLocation = userData.location.trim();
   const user = new User({
     ...userData,
     name: userData.name.trim(),
     email: userData.email.trim().toLowerCase(),
     number: userData.number.trim(),
     bloodGroup: userData.bloodGroup.trim(),
-    location: userData.location.trim(),
+    district: normalizedLocation,
+    location: normalizedLocation,
+    trustScore: 50,
+    rewardPoints: 0,
+    badges: [],
     role: (userData.role || "donor").trim().toLowerCase(),
   });
   await user.save();
@@ -209,7 +214,10 @@ router.post("/register", async (req, res) => {
         email: user.email,
         number: user.number,
         bloodGroup: user.bloodGroup,
+        division: user.division || "",
+        district: user.district || user.location,
         location: user.location,
+        trustScore: user.trustScore || 50,
         role: user.role,
       },
     });
@@ -257,7 +265,10 @@ router.post("/login", async (req, res) => {
         email: user.email,
         number: user.number,
         bloodGroup: user.bloodGroup,
+        division: user.division || "",
+        district: user.district || user.location,
         location: user.location,
+        trustScore: user.trustScore || 50,
         role: user.role,
       },
       requestedRole: (role || "").trim().toLowerCase(),

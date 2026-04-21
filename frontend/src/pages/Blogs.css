@@ -62,6 +62,24 @@
   padding: 1.5rem;
 }
 
+.blog-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-meta-row span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #7f1d1d;
+  background: #fef2f2;
+  border: 1px solid #f7d7d7;
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+}
+
 .blog-card-title {
   font-size: 1.25rem;
   font-weight: 600;

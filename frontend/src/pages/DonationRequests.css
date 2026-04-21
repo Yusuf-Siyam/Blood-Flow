@@ -127,3 +127,41 @@
 .view-details-btn:hover {
   background-color: #111827; /* gray-900 */
 }
+
+.urgency-chip {
+  display: inline-flex;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 700;
+}
+
+.urgency-chip--critical {
+  background: #b91c1c;
+  color: #fff;
+}
+
+.locked-row {
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.details-panel {
+  margin-top: 2rem;
+  border: 1px solid #f2cfcf;
+  border-radius: 12px;
+  padding: 1.25rem;
+  background: #fff;
+}
+
+.details-panel h2 {
+  margin-top: 0;
+  color: #7f1d1d;
+}
+
+.details-panel p {
+  margin: 0.45rem 0;
+  color: #374151;
+}

@@ -73,6 +73,10 @@
   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
 }
 
+.search-select {
+  padding-left: 1rem;
+}
+
 .search-button {
   background-color: #ef4444; /* red-500 */
   color: white;
@@ -192,6 +196,24 @@
   grid-column: 1 / -1;
   padding: 2rem;
   color: #6b7280; /* gray-500 */
+}
+
+.contact-panel {
+  margin-top: 2rem;
+  border: 1px solid #f2cfcf;
+  border-radius: 12px;
+  background: #fff;
+  padding: 1.2rem;
+}
+
+.contact-panel h2 {
+  margin: 0;
+  color: #7f1d1d;
+}
+
+.contact-panel p {
+  margin: 0.5rem 0 0;
+  color: #4b5563;
 }
 
 @media (min-width: 768px) {
