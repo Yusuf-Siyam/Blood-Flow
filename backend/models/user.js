@@ -7,6 +7,14 @@ const userSchema = new mongoose.Schema({
   number: { type: String, required: true, trim: true },
   bloodGroup: { type: String, required: true, trim: true },
   location: { type: String, required: true, trim: true },
+  availability: { type: Boolean, default: true },
+  donationHistory: [
+    {
+      date: { type: Date, default: Date.now },
+      location: { type: String, required: true, trim: true },
+      notes: { type: String, default: "" },
+    },
+  ],
   password: { type: String, required: true },
   role: {
     type: String,

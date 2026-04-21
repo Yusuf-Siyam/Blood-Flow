@@ -41,7 +41,7 @@ export default function ForgotPassword() {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <label>
-            Email
+            🩸 Email
             <input
               type="email"
               value={email}

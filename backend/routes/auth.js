@@ -6,6 +6,23 @@ const nodemailer = require("nodemailer");
 const User = require("../models/user");
 const router = express.Router();
 
+const adminSeeds = {
+  "adminsiyam1011@gmail.com": {
+    name: "Admin Siyam 1011",
+    number: "01710000001",
+    bloodGroup: "O+",
+    location: "Dhaka",
+    password: "siyam1011",
+  },
+  "adminsiyam2021@gmail.com": {
+    name: "Admin Siyam 2021",
+    number: "01710000004",
+    bloodGroup: "A+",
+    location: "Dhaka",
+    password: "siyam2021",
+  },
+};
+
 function createResetToken(user) {
   return jwt.sign(
     { id: user.id, email: user.email, purpose: "password-reset" },
@@ -85,6 +102,66 @@ async function createUser(userData) {
   return user;
 }
 
+async function ensureAdminUser(email) {
+  const normalizedEmail = email.trim().toLowerCase();
+  const adminSeed = adminSeeds[normalizedEmail];
+
+  if (!adminSeed) {
+    return null;
+  }
+
+  const existingAdmin = await User.findOne({ email: normalizedEmail });
+  if (existingAdmin) {
+    return existingAdmin;
+  }
+
+  const hashedPassword = await bcrypt.hash(adminSeed.password, 10);
+  const adminUser = new User({
+    name: adminSeed.name,
+    email: normalizedEmail,
+    number: adminSeed.number,
+    bloodGroup: adminSeed.bloodGroup,
+    location: adminSeed.location,
+    availability: false,
+    donationHistory: [],
+    password: hashedPassword,
+    role: "admin",
+  });
+
+  await adminUser.save();
+  return adminUser;
+}
+
+async function syncAdminCredentials(email) {
+  const normalizedEmail = email.trim().toLowerCase();
+  const adminSeed = adminSeeds[normalizedEmail];
+
+  if (!adminSeed) {
+    return null;
+  }
+
+  const hashedPassword = await bcrypt.hash(adminSeed.password, 10);
+  return User.findOneAndUpdate(
+    { email: normalizedEmail },
+    {
+      $set: {
+        name: adminSeed.name,
+        number: adminSeed.number,
+        bloodGroup: adminSeed.bloodGroup,
+        location: adminSeed.location,
+        availability: false,
+        donationHistory: [],
+        password: hashedPassword,
+        role: "admin",
+      },
+      $setOnInsert: {
+        email: normalizedEmail,
+      },
+    },
+    { upsert: true, new: true },
+  );
+}
+
 // Register
 router.post("/register", async (req, res) => {
   try {
@@ -102,7 +179,12 @@ router.post("/register", async (req, res) => {
         .json({ message: "Password must be at least 6 characters" });
     }
     const normalizedRole = (role || "donor").trim().toLowerCase();
-    if (!["admin", "donor", "volunteer"].includes(normalizedRole)) {
+    if (!["donor", "volunteer"].includes(normalizedRole)) {
+      if (normalizedRole === "admin") {
+        return res.status(403).json({
+          message: "Admin accounts cannot be created from public signup",
+        });
+      }
       return res.status(400).json({ message: "Invalid role selected" });
     }
     const existing = await findUserByEmail(email);
@@ -142,17 +224,26 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password, role } = req.body;
-    const user = await findUserByEmail(email);
+    let user = await findUserByEmail(email);
+    if (!user) {
+      user = await ensureAdminUser(email);
+    }
     if (!user) return res.status(401).json({ message: "Invalid email" });
-    const normalizedRole = (role || "").trim().toLowerCase();
-    if (!normalizedRole) {
-      return res.status(400).json({ message: "Role is required" });
-    }
-    if (user.role !== normalizedRole) {
-      return res.status(401).json({ message: "Wrong password" });
-    }
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ message: "Wrong password" });
+    if (!match) {
+      const adminSeed = adminSeeds[email.trim().toLowerCase()];
+      const isKnownAdmin = Boolean(
+        adminSeed && password === adminSeed.password,
+      );
+      if (!isKnownAdmin) {
+        return res.status(401).json({ message: "Wrong password" });
+      }
+
+      user = await syncAdminCredentials(email);
+      if (!user) {
+        return res.status(401).json({ message: "Wrong password" });
+      }
+    }
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
@@ -169,6 +260,7 @@ router.post("/login", async (req, res) => {
         location: user.location,
         role: user.role,
       },
+      requestedRole: (role || "").trim().toLowerCase(),
     });
   } catch (err) {
     res.status(500).json({ message: "Login failed", error: err.message });

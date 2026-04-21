@@ -1,11 +1,18 @@
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+
+const roleOptions = [
+  { label: "Donor", value: "donor" },
+  { label: "Volunteer", value: "volunteer" },
+  { label: "Admin", value: "admin" },
+];
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
   const { role = "donor" } = useParams();
 
@@ -25,6 +32,16 @@ export default function Login() {
       if (!res.ok) throw new Error(data.message || "Login failed");
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      const from = location.state?.from;
+      const action = location.state?.action;
+      if (from) {
+        const separator = from.includes("?") ? "&" : "?";
+        const nextUrl = action
+          ? `${from}${separator}continued=${encodeURIComponent(action)}`
+          : from;
+        navigate(nextUrl, { replace: true });
+        return;
+      }
       navigate(`/dashboard/${data.user.role}`);
     } catch (err) {
       setError(err.message);
@@ -40,13 +57,29 @@ export default function Login() {
         <h1>Welcome back</h1>
         <p>Sign in to continue managing donations and requests.</p>
 
+        <div className="role-switcher">
+          {roleOptions.map((option) => (
+            <Link
+              key={option.value}
+              to={`/login/${option.value}`}
+              className={
+                option.value === role
+                  ? "role-switcher__item role-switcher__item--active"
+                  : "role-switcher__item"
+              }
+            >
+              {option.label}
+            </Link>
+          ))}
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 16 }}>
             <label
               htmlFor="email"
               style={{ display: "block", marginBottom: 8 }}
             >
-              Email
+              🩸 Email
             </label>
             <input
               id="email"
@@ -64,7 +97,7 @@ export default function Login() {
               htmlFor="password"
               style={{ display: "block", marginBottom: 8 }}
             >
-              Password
+              🩸 Password
             </label>
             <input
               id="password"

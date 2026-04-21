@@ -86,7 +86,7 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <label>
-            Name
+            🩸 Name
             <input
               name="name"
               value={form.name}
@@ -97,7 +97,7 @@ export default function Register() {
           </label>
 
           <label>
-            Email
+            🩸 Email
             <input
               name="email"
               type="email"
@@ -109,7 +109,7 @@ export default function Register() {
           </label>
 
           <label>
-            Number
+            🩸 Number
             <input
               name="number"
               type="tel"
@@ -122,7 +122,7 @@ export default function Register() {
           </label>
 
           <label>
-            Blood Group
+            🩸 Blood Group
             <select
               name="bloodGroup"
               value={form.bloodGroup}
@@ -141,7 +141,7 @@ export default function Register() {
           </label>
 
           <label>
-            Location
+            🩸 Location
             <input
               name="location"
               value={form.location}
@@ -153,7 +153,7 @@ export default function Register() {
           </label>
 
           <label>
-            Password
+            🩸 Password
             <input
               name="password"
               type="password"
@@ -165,7 +165,7 @@ export default function Register() {
           </label>
 
           <label>
-            Role
+            🩸 Role
             <select
               name="role"
               value={form.role}
@@ -174,7 +174,6 @@ export default function Register() {
             >
               <option value="donor">Donor</option>
               <option value="volunteer">Volunteer</option>
-              <option value="admin">Admin</option>
             </select>
           </label>
 

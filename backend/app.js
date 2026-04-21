@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const authRoutes = require("./routes/auth");
+const donorRoutes = require("./routes/donor");
 
 // Middleware
 app.use(
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/donor", donorRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });

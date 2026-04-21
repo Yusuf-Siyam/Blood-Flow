@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-label="Blood donation and fitness">
+  <defs>
+    <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#g2)"/>
+  <rect x="170" y="380" width="860" height="42" rx="21" fill="#1e3a8a" opacity="0.16"/>
+  <rect x="210" y="315" width="330" height="42" rx="21" fill="#1d4ed8" opacity="0.28"/>
+  <rect x="660" y="315" width="330" height="42" rx="21" fill="#1d4ed8" opacity="0.28"/>
+  <circle cx="600" cy="260" r="80" fill="#1d4ed8" opacity="0.18"/>
+  <path d="M575 220l30 55h-30l20 65-55-78h33l-18-42z" fill="#1d4ed8"/>
+  <text x="600" y="575" text-anchor="middle" font-family="Arial, sans-serif" font-size="54" font-weight="700" fill="#1e3a8a">Blood Donation and Fitness</text>
+  <text x="600" y="630" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#1e3a8a">Stay active and donate safely</text>
+</svg>

@@ -1,34 +1,60 @@
 import { Link } from "react-router-dom";
+import "./Landing.css";
 
-const roles = [
-  { label: "Admin", path: "/login/admin", icon: "🧑‍💼" },
-  { label: "Donor", path: "/login/donor", icon: "🩸" },
-  { label: "Volunteer", path: "/login/volunteer", icon: "🙋" },
-];
-
-export default function Landing() {
+const Landing = () => {
   return (
-    <div className="auth-shell">
-      <section className="auth-card auth-card--hero">
-        <div className="auth-badge">Blood Flow</div>
-        <h1>Choose your access</h1>
-        <p>Secure role-based entry for Admin, Donor, and Volunteer accounts.</p>
-
-        <div className="role-grid">
-          {roles.map((role) => (
-            <Link key={role.label} to={role.path} className="role-button">
-              <span className="role-button__icon">{role.icon}</span>
-              <span className="role-button__text">{role.label}</span>
+    <div className="landing-container">
+      <section className="hero-section">
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1 className="hero-title">Give Blood, Give Hope</h1>
+          <p className="hero-subtitle">
+            A single donation can save multiple lives. Be the reason someone
+            gets a second chance today.
+          </p>
+          <div className="hero-buttons">
+            <Link to="/register" className="btn btn-primary">
+              Join as a Donor
             </Link>
-          ))}
+            <Link to="/search-donors" className="btn btn-secondary">
+              Search Donors
+            </Link>
+          </div>
         </div>
+      </section>
 
-        <div style={{ marginTop: 18 }}>
-          <Link className="link-button" to="/register">
-            Create account
-          </Link>
+      <section className="support-section">
+        <h2 className="support-title">Why Support Blood Donation?</h2>
+        <div className="support-separator"></div>
+        <div className="support-grid">
+          <div className="support-card">
+            <h3>Save Lives</h3>
+            <p>
+              Your blood can be a lifeline for patients in critical condition,
+              including accident victims, surgery patients, and those with
+              chronic illnesses.
+            </p>
+          </div>
+          <div className="support-card">
+            <h3>Community Well-being</h3>
+            <p>
+              A healthy and available blood supply is a cornerstone of a
+              resilient community. Your donation strengthens our collective
+              health.
+            </p>
+          </div>
+          <div className="support-card">
+            <h3>Personal Health Benefits</h3>
+            <p>
+              Regular blood donation can lead to health benefits, including
+              reduced iron levels and a free health check-up before every
+              donation.
+            </p>
+          </div>
         </div>
       </section>
     </div>
   );
-}
+};
+
+export default Landing;

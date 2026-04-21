@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-label="The business of saving lives">
+  <defs>
+    <linearGradient id="g4" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="100%" stop-color="#ffedd5"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#g4)"/>
+  <rect x="290" y="200" width="620" height="320" rx="28" fill="#9a3412" opacity="0.14"/>
+  <path d="M370 420h150v-90h-150zm180 0h150V300H550zm180 0h150V240H730z" fill="#c2410c" opacity="0.75"/>
+  <text x="600" y="575" text-anchor="middle" font-family="Arial, sans-serif" font-size="50" font-weight="700" fill="#9a3412">The Business of Saving Lives</text>
+  <text x="600" y="630" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#9a3412">Workplaces can drive donations</text>
+</svg>
